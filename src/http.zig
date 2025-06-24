@@ -2953,6 +2953,8 @@ pub fn buildRequest(this: *HTTPClient, body_len: usize) picohttp.Request {
             => {
                 original_content_length = this.headerStr(header_values[i]);
                 override_content_length = true;
+                //We don't want to add the chunked encoding header if there's a fixed content-length
+                add_transfer_encoding = false;
                 continue;
             },
             hashHeaderConst("Connection") => {
