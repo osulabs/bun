@@ -2937,6 +2937,7 @@ pub fn buildRequest(this: *HTTPClient, body_len: usize) picohttp.Request {
     var override_accept_header = false;
     var override_host_header = false;
     var override_user_agent = false;
+    var override_content_length = false;
     var add_transfer_encoding = true;
     var original_content_length: ?string = null;
 
@@ -2951,6 +2952,7 @@ pub fn buildRequest(this: *HTTPClient, body_len: usize) picohttp.Request {
             hashHeaderConst("Content-Length"),
             => {
                 original_content_length = this.headerStr(header_values[i]);
+                overwrite_content_length = true;
                 continue;
             },
             hashHeaderConst("Connection") => {
@@ -3032,7 +3034,7 @@ pub fn buildRequest(this: *HTTPClient, body_len: usize) picohttp.Request {
         header_count += 1;
     }
 
-    if (body_len > 0 or this.method.hasRequestBody()) {
+    if (!override_content_length and (body_len > 0 or this.method.hasRequestBody())) {
         if (this.flags.is_streaming_request_body) {
             if (add_transfer_encoding) {
                 request_headers_buf[header_count] = chunked_encoded_header;
