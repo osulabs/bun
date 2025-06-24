@@ -2952,7 +2952,7 @@ pub fn buildRequest(this: *HTTPClient, body_len: usize) picohttp.Request {
             hashHeaderConst("Content-Length"),
             => {
                 original_content_length = this.headerStr(header_values[i]);
-                overwrite_content_length = true;
+                override_content_length = true;
                 continue;
             },
             hashHeaderConst("Connection") => {
